@@ -93,5 +93,6 @@ public class KakaoAuthService {
     private void updateUser(KakaoUserReq kakaoUser) {
 
         //todo 업데이트 어떻게? 이미지만?
+        //todo base time 엔티티 만들기
     }
 }
