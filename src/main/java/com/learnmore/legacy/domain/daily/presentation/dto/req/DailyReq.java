@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class DailyReq {
+    private Long userId;
     private String title;
     private String content;
 }

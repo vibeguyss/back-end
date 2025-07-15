@@ -1,6 +1,7 @@
 package com.learnmore.legacy.domain.daily.model;
 
 import com.learnmore.legacy.domain.daily.presentation.dto.req.DailyReq;
+import com.learnmore.legacy.domain.user.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,21 +22,17 @@ public class Daily {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long dailyId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "content", nullable = false)
     private String content;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @CreationTimestamp
     @Column(name = "create_at", nullable = false, updatable = false)
     private LocalDateTime createAt;
-
-    public void update(DailyReq dailyReq) {
-        this.title = dailyReq.getTitle();
-        this.content = dailyReq.getContent();
-    }
 }

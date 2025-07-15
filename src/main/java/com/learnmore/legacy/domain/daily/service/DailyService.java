@@ -4,6 +4,8 @@ import com.learnmore.legacy.domain.daily.model.Daily;
 import com.learnmore.legacy.domain.daily.model.repo.DailyJpaRepo;
 import com.learnmore.legacy.domain.daily.presentation.dto.req.DailyReq;
 import com.learnmore.legacy.domain.daily.presentation.dto.res.DailyRes;
+import com.learnmore.legacy.domain.user.model.User;
+import com.learnmore.legacy.domain.user.model.repo.UserJpaRepo;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,39 +18,30 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DailyService {
     private final DailyJpaRepo dailyJpaRepo;
+    private final UserJpaRepo userJpaRepo;
 
-    public List<DailyRes> getAllDaily() {
-        return dailyJpaRepo.findAll()
-                .stream()
+    public List<DailyRes> getAllDaily(Long userId) {
+        List<Daily> dailyList = dailyJpaRepo.findAllByUser_UserId(userId);
+        return dailyList.stream()
                 .map(DailyRes::from)
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public DailyRes addDaily(DailyReq dailyReq) {
+        User user = userJpaRepo.findById(dailyReq.getUserId()).orElseThrow(EntityNotFoundException::new);
         Daily daily = Daily.builder()
                 .title(dailyReq.getTitle())
                 .content(dailyReq.getContent())
+                .user(user)
                 .build();
         dailyJpaRepo.save(daily);
         return DailyRes.from(daily);
     }
 
-    public DailyRes patchDaily(Long id, DailyReq dailyReq) {
-        Daily daily = dailyJpaRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("아이디를 찾을 없습니다."));
-        daily.update(dailyReq);
-        dailyJpaRepo.save(daily);
-        return DailyRes.from(daily);
-    }
-
-    public void deleteDaily(Long id) {
-        dailyJpaRepo.deleteById(id);
-    }
-
-    public DailyRes getDailyById(Long id) {
-        Daily daily = dailyJpaRepo.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("아이디를 찾을 수 없습니다."));
+    public DailyRes getDailyById(Long userId, Long dailyId) {
+        Daily daily = dailyJpaRepo.findByDailyIdAndUser_UserId(dailyId, userId)
+                .orElseThrow(() -> new EntityNotFoundException("에러 발생"));
         return DailyRes.from(daily);
     }
 }

@@ -14,14 +14,12 @@ public class DailyRes {
     private Long dailyId;
     private String title;
     private String content;
-    private String name;
 
     public static DailyRes from(Daily daily) {
         return DailyRes.builder()
                 .dailyId(daily.getDailyId())
                 .title(daily.getTitle())
                 .content(daily.getContent())
-                .name(daily.getName())
                 .build();
     }
 }
