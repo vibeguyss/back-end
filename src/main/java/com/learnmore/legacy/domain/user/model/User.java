@@ -34,6 +34,9 @@ public class User {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "image_url", length = 1000, nullable = false)
     private String imageUrl;
 

@@ -4,7 +4,9 @@ import com.learnmore.legacy.domain.daily.model.Daily;
 import com.learnmore.legacy.domain.daily.model.repo.DailyJpaRepo;
 import com.learnmore.legacy.domain.daily.presentation.dto.req.DailyReq;
 import com.learnmore.legacy.domain.daily.presentation.dto.res.DailyRes;
+import com.learnmore.legacy.domain.daily.presentation.dto.res.DoctorRes;
 import com.learnmore.legacy.domain.user.model.User;
+import com.learnmore.legacy.domain.user.model.enums.UserRole;
 import com.learnmore.legacy.domain.user.model.repo.UserJpaRepo;
 import com.learnmore.legacy.global.common.repo.UserSessionHolder;
 import jakarta.persistence.EntityNotFoundException;
@@ -49,5 +51,13 @@ public class DailyService {
         User user = userSessionHolder.get();
         Daily daily = dailyJpaRepo.findByDailyIdAndUser(dailyId, user);
         return DailyRes.from(daily);
+    }
+
+    public List<DoctorRes> getDoctors() {
+        List<User> doctors = userJpaRepo.findAllByRole(UserRole.DOCTOR);
+
+        return doctors.stream()
+                .map(DoctorRes::from)
+                .collect(Collectors.toList());
     }
 }
