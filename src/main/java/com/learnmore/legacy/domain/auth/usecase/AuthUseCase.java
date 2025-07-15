@@ -1,7 +1,8 @@
 package com.learnmore.legacy.domain.auth.usecase;
 
-import com.learnmore.legacy.domain.Kakaooauth.presentation.dto.request.KakaoUserReq;
+
 import com.learnmore.legacy.domain.auth.dao.RefreshTokenDao;
+import com.learnmore.legacy.domain.auth.presentation.dto.request.SignupReq;
 import com.learnmore.legacy.domain.auth.presentation.dto.request.RefreshReq;
 import com.learnmore.legacy.domain.auth.presentation.dto.request.SingInReq;
 import com.learnmore.legacy.domain.auth.presentation.dto.response.TokenRes;
@@ -16,6 +17,9 @@ import com.learnmore.legacy.global.security.jwt.enums.JwtType;
 import com.learnmore.legacy.global.security.jwt.error.JwtError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static com.learnmore.legacy.domain.user.model.enums.UserRole.DOCTOR;
+import static com.learnmore.legacy.domain.user.model.enums.UserRole.USER;
 
 @Service
 @RequiredArgsConstructor
@@ -35,24 +39,12 @@ public class AuthUseCase {
         }
     }
 
-    public void signup(KakaoUserReq req) {
+    public void signup(SignupReq req) {
         if (!userService.existsByUserId(req.id())){
             User user = User.builder()
                     .userId(req.id())
-                    .nickname(req.nickname())
-                    .level(1)
-                    .exp(0)
-                    .credit(0)
-                    .snowflakeCapacity(5)
-                    .storeRestock(1)
-                    .creditCollect(3)
-                    .dropCount(1)
-                    .role(UserRole.USER)
-                    .allBlocks(0)
-                    .ruinsBlocks(0)
-                    .maxFloor(0)
-                    .maxScore(0)
-                    .imageUrl(req.profileImage())
+                    .role(req.userRole())
+                    .imageUrl(null)
                     .build();
             userService.saveUser(user);
 

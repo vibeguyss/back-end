@@ -1,7 +1,7 @@
 package com.learnmore.legacy.domain.auth.presentation;
 
-import com.learnmore.legacy.domain.Kakaooauth.presentation.dto.request.KakaoUserReq;
 import com.learnmore.legacy.domain.auth.presentation.dto.request.RefreshReq;
+import com.learnmore.legacy.domain.auth.presentation.dto.request.SignupReq;
 import com.learnmore.legacy.domain.auth.presentation.dto.request.SingInReq;
 import com.learnmore.legacy.domain.auth.presentation.dto.response.TokenRes;
 import com.learnmore.legacy.domain.auth.usecase.AuthUseCase;
@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthUseCase authUseCase;
 
-    @Operation(summary = "테스트용 입니다")
+    @Operation(summary = "회원가입")
     @PostMapping("/sign-up")
-    public ResponseEntity<BaseResponse<String>> signUp(@RequestBody KakaoUserReq req) {
+    public ResponseEntity<BaseResponse<String>> signUp(@RequestBody SignupReq req) {
         authUseCase.signup(req);
         return BaseResponse.of("성공");
     }
 
-    @Operation(summary = "테스트용 입니다")
+    @Operation(summary = "로그인 이다 ")
     @PostMapping("/sign-in")
     public ResponseEntity<BaseResponse<TokenRes>> login(@RequestBody SingInReq req) {
         return BaseResponse.of(authUseCase.signIn(req));
